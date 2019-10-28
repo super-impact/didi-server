@@ -1,0 +1,50 @@
+{
+  "name": "didi-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "NODE_ENV=development nodemon -e ts --exec ts-node ./src/app.ts",
+    "build": "tsc",
+    "start": "NODE_ENV=production node ./build/app.js",
+    "prod": "yarn build && yarn start"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.3.3",
+    "@typescript-eslint/parser": "^2.3.3",
+    "apollo-server": "^2.9.5",
+    "apollo-server-koa": "^2.9.5",
+    "dotenv": "^8.1.0",
+    "eslint": "^6.5.1",
+    "eslint-config-prettier": "^6.4.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "graphql": "^14.5.8",
+    "graphql-iso-date": "^3.6.1",
+    "kcors": "^2.2.2",
+    "koa": "^2.8.2",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0",
+    "lodash": "^4.17.15",
+    "mysql2": "^1.7.0",
+    "prettier   ": "^1.18.2",
+    "type-graphql": "^0.17.5",
+    "typedi": "^0.8.0",
+    "typeorm": "^0.2.19",
+    "typeorm-typedi-extensions": "^0.2.3",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/graphql": "^14.5.0",
+    "@types/graphql-iso-date": "^3.3.3",
+    "@types/kcors": "^2.2.3",
+    "@types/koa": "^2.0.50",
+    "@types/koa-bodyparser": "^4.3.0",
+    "@types/koa-router": "^7.0.42",
+    "@types/lodash": "^4.14.142",
+    "@types/winston": "^2.4.4",
+    "nodemon": "^1.19.3",
+    "reflect-metadata": "^0.1.13",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.3"
+  }
+}
