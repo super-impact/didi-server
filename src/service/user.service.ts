@@ -11,6 +11,24 @@ class UserService {
   public async userEmailExist(user: User) {
     return !!this.userRepository.findByEmail(user.email);
   }
+
+  public async createUser({
+    email,
+    salt,
+    hash,
+    displayName,
+    profileImageUrl,
+    provider,
+  }: {
+    email: string;
+    salt: string;
+    hash: string;
+    displayName: string;
+    profileImageUrl: string;
+    provider: string;
+  }) {
+    return this.userRepository.createUser({ email, salt, hash, displayName, profileImageUrl, provider });
+  }
 }
 
 export default UserService;

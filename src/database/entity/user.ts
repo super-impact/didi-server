@@ -11,8 +11,11 @@ class User {
   @Column({ name: 'email' })
   email: string;
 
-  @Column({ name: 'password' })
-  password: string;
+  @Column({ name: 'salt', nullable: true })
+  salt?: string;
+
+  @Column({ name: 'hash', nullable: true })
+  hash?: string;
 
   @Column({ name: 'display_name' })
   displayName: string;
@@ -20,14 +23,14 @@ class User {
   @Column({ name: 'profile_image_url' })
   profileImageUrl: string;
 
+  @Column({ name: 'provider' })
+  provider: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
-
-  @Column({ name: 'auth_type' })
-  authType: string;
 
   @OneToMany(type => Post, post => post.contributorUser, { cascade: true })
   posts: Post[];
