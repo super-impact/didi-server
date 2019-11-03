@@ -1,33 +1,46 @@
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 
-import { User } from '../database/entity';
 import { UserRepository } from '../database/repository';
+import { encryption } from '../utils/password.util';
 
 @Service()
 class UserService {
   constructor(@InjectRepository() private readonly userRepository: UserRepository) {}
 
-  public async userEmailExist(user: User) {
-    return !!this.userRepository.findByEmail(user.email);
+  public async isExistEmail({ email }: { email: string }) {
+    const user = await this.userRepository.findByEmail(email);
+
+    if (user) {
+      return true;
+    }
+
+    return false;
   }
 
   public async createUser({
     email,
-    salt,
-    hash,
+    password,
     displayName,
     profileImageUrl,
     provider,
   }: {
     email: string;
-    salt: string;
-    hash: string;
+    password: string;
     displayName: string;
     profileImageUrl: string;
     provider: string;
   }) {
-    return this.userRepository.createUser({ email, salt, hash, displayName, profileImageUrl, provider });
+    const { passwordSalt, passwordHash } = encryption(password);
+
+    return this.userRepository.createUser({
+      email,
+      passwordSalt,
+      passwordHash,
+      displayName,
+      profileImageUrl,
+      provider,
+    });
   }
 }
 

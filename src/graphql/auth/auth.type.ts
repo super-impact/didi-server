@@ -1,24 +1,26 @@
-import { Field, ArgsType } from 'type-graphql';
+import { Field, InputType, registerEnumType } from 'type-graphql';
 
 export enum Provider {
-  email = 'email',
-  GOOGLE = 'google',
+  password = 'password',
+  google = 'google',
 }
 
-@ArgsType()
-export class SignInArgs {
-  @Field()
-  provider: Provider;
+registerEnumType(Provider, { name: 'Provider' });
 
+@InputType()
+export class SignInInput {
   @Field({ nullable: true })
   email?: string;
 
   @Field({ nullable: true })
   password?: string;
+
+  @Field(type => Provider)
+  provider: string;
 }
 
-@ArgsType()
-export class SignUpArgs {
+@InputType()
+export class SignUpInput {
   @Field()
   email: string;
 
@@ -31,6 +33,6 @@ export class SignUpArgs {
   @Field()
   profileImageUrl: string;
 
-  @Field()
+  @Field(type => Provider)
   provider: string;
 }

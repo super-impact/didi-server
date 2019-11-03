@@ -1,11 +1,10 @@
-import { Mutation, Resolver, Args } from 'type-graphql';
+import { Mutation, Resolver, Arg } from 'type-graphql';
 import { Service } from 'typedi';
-import { randomFillSync, scryptSync } from 'crypto';
 
 import { UserService } from '../../service';
 import { User } from '../user/user.type';
-import { SignInArgs, SignUpArgs } from './auth.type';
-import { from } from 'apollo-link';
+import { SignInInput, SignUpInput } from './auth.type';
+import { ServiceError, ServiceErrorType } from '../error/ServiceError';
 
 @Resolver(User)
 @Service()
@@ -13,16 +12,20 @@ class AuthResolver {
   constructor(private userService: UserService) {}
 
   @Mutation(returns => User)
-  async signIn(@Args() signIn: SignInArgs) {
+  async signIn(@Arg('signIn') signIn: SignInInput) {
     return {} as User;
   }
 
   @Mutation(returns => User)
-  async signUp(@Args() { email, password, displayName, profileImageUrl, provider }: SignUpArgs) {
-    const salt = randomFillSync(Buffer.alloc(64)).toString('hex');
-    const hash = scryptSync(password, salt, 64).toString('hex');
+  async signUp(@Arg('signUpInput') signUpInput: SignUpInput) {
+    const { email, password, displayName, profileImageUrl, provider } = signUpInput;
+    const isExistEmail = await this.userService.isExistEmail({ email });
 
-    return this.userService.createUser({ email, salt, hash, displayName, profileImageUrl, provider });
+    if (isExistEmail) {
+      return ServiceError(ServiceErrorType.ExistEmail);
+    }
+
+    return this.userService.createUser({ email, password, displayName, profileImageUrl, provider });
   }
 }
 

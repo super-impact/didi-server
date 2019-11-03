@@ -10,29 +10,8 @@ class UserRepository extends Repository<User> {
     return this.findOne({ email });
   }
 
-  public async createUser({
-    email,
-    salt,
-    hash,
-    displayName,
-    profileImageUrl,
-    provider,
-  }: {
-    email: string;
-    salt: string;
-    hash: string;
-    displayName: string;
-    profileImageUrl: string;
-    provider: string;
-  }) {
-    return this.save({
-      email,
-      salt,
-      hash,
-      displayName,
-      profileImageUrl,
-      provider,
-    });
+  public async createUser(user: Partial<User>) {
+    return this.save(user);
   }
 }
 

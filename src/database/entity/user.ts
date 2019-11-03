@@ -3,19 +3,18 @@ import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Un
 import Post from './post';
 
 @Entity({ name: 'users' })
-@Unique(['email'])
 class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'email' })
+  @Column({ name: 'email', unique: true })
   email: string;
 
-  @Column({ name: 'salt', nullable: true })
-  salt?: string;
+  @Column({ name: 'password_salt', nullable: true })
+  passwordSalt?: string;
 
-  @Column({ name: 'hash', nullable: true })
-  hash?: string;
+  @Column({ name: 'password_hash', nullable: true })
+  passwordHash?: string;
 
   @Column({ name: 'display_name' })
   displayName: string;
