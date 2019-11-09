@@ -37,6 +37,9 @@ export class Post {
 
   @Field(type => [Topic])
   topics: Topic[];
+
+  @Field()
+  likeCount: number;
 }
 
 @ArgsType()
