@@ -6,9 +6,11 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import PostLike from './postLike';
 import Topic from './topic';
 import User from './user';
 
@@ -33,7 +35,7 @@ class Post {
   contentMakerEmail: string;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: string;
+  createdAt: Date;
 
   @ManyToOne(type => User, user => user.id)
   @JoinColumn({ name: 'fk_contributor_user_id' })
@@ -42,6 +44,9 @@ class Post {
   @ManyToMany(type => Topic, topic => topic.name)
   @JoinTable({ name: 'posts_topics' })
   topics: Topic[];
+
+  @OneToMany(type => PostLike, postLike => postLike.post, { cascade: true })
+  postLikes: PostLike[];
 }
 
 export default Post;

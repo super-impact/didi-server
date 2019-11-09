@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
 
 import Post from './post';
+import PostLike from './postLike';
 
 @Entity({ name: 'users' })
 @Unique(['email'])
@@ -31,6 +32,9 @@ class User {
 
   @OneToMany(type => Post, post => post.contributorUser, { cascade: true })
   posts: Post[];
+
+  @OneToMany(type => PostLike, postLike => postLike.user, { cascade: true })
+  postLikes: PostLike[];
 }
 
 export default User;
