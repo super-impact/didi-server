@@ -52,3 +52,9 @@ export class GetPostsArgs {
   @Min(1)
   take = 25;
 }
+
+@ArgsType()
+export class GetPostArgs {
+  @Field(type => String)
+  id: string;
+}

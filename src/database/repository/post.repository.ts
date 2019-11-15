@@ -18,6 +18,15 @@ class PostRepository extends Repository<Post> {
       .take(take)
       .getMany();
   }
+
+  public async getPostById(id: string) {
+    return this.findOne({
+      relations: ['contributorUser', 'topics', 'postLikes'],
+      where: {
+        id,
+      },
+    });
+  }
 }
 
 export default PostRepository;
