@@ -12,7 +12,6 @@ class PostRepository extends Repository<Post> {
       .leftJoinAndSelect('posts.contributorUser', 'users')
       .leftJoinAndSelect('posts.postLikes', 'postLike')
       .leftJoin('posts.postLikes', 'user')
-      .loadRelationCountAndMap('posts.likeCount', 'posts.postLikes')
       .orderBy('posts.createdAt', 'DESC')
       .skip(skip)
       .take(take)
