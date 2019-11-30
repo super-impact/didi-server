@@ -3,7 +3,7 @@ import 'reflect-metadata';
 import Container from 'typedi';
 import { ConnectionOptions, createConnection, useContainer } from 'typeorm';
 
-import logger from '../utils/logger';
+import { logger } from '../utils';
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 

@@ -7,7 +7,7 @@ import BodyParser from 'koa-bodyparser';
 
 import { connectDatabase } from './database/connection';
 import graphqlSchema from './graphql';
-import logger from './utils/logger';
+import { logger } from './utils/logger';
 
 class Server {
   private app: Koa;

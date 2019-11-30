@@ -2,7 +2,7 @@ import winston from 'winston';
 
 const { combine, timestamp, prettyPrint } = winston.format;
 
-const logger = winston.createLogger({
+export const logger = winston.createLogger({
   level: 'info',
   format: winston.format.json(),
   defaultMeta: { service: 'didi-server' },
@@ -17,5 +17,3 @@ logger.add(
     format: combine(timestamp(), prettyPrint()),
   }),
 );
-
-export default logger;
