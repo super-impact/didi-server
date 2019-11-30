@@ -8,8 +8,12 @@ import { UserRepository } from '../database/repository';
 class UserService {
   constructor(@InjectRepository() private readonly userRepository: UserRepository) {}
 
-  public async userEmailExist(user: User) {
-    return !!this.userRepository.findByEmail(user.email);
+  public async isExistedUserByEmail(email: string) {
+    return this.userRepository.findByEmail(email);
+  }
+
+  public async createUser(user: Partial<User>) {
+    return this.userRepository.save(user);
   }
 }
 
