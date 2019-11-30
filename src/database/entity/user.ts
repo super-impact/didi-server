@@ -9,17 +9,23 @@ class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'email' })
+  @Column({ name: 'email', unique: true })
   email: string;
 
-  @Column({ name: 'password' })
-  password: string;
+  @Column({ name: 'password_salt', nullable: true })
+  passwordSalt?: string;
+
+  @Column({ name: 'password_hash', nullable: true })
+  passwordHash?: string;
 
   @Column({ name: 'display_name' })
   displayName: string;
 
-  @Column({ name: 'profile_image_url' })
+  @Column({ name: 'profile_image_url', default: 'default_profile_image' })
   profileImageUrl: string;
+
+  @Column({ name: 'provider' })
+  provider: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
@@ -27,13 +33,18 @@ class User {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @Column({ name: 'auth_type' })
-  authType: string;
-
-  @OneToMany(type => Post, post => post.contributorUser, { cascade: true })
+  @OneToMany(
+    type => Post,
+    post => post.contributorUser,
+    { cascade: true },
+  )
   posts: Post[];
 
-  @OneToMany(type => PostLike, postLike => postLike.user, { cascade: true })
+  @OneToMany(
+    type => PostLike,
+    postLike => postLike.user,
+    { cascade: true },
+  )
   postLikes: PostLike[];
 }
 
