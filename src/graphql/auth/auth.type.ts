@@ -1,14 +1,28 @@
-import { Field, InputType } from 'type-graphql';
+import { Field, InputType, ObjectType } from 'type-graphql';
 
-enum AuthType {
-  email = 'email',
-  GOOGLE = 'google',
+import { User } from '../user/user.type';
+
+enum Provider {
+  Email = 'email',
+  Google = 'google',
+}
+
+@ObjectType()
+class Auth {
+  @Field(type => User)
+  user: User;
+
+  @Field()
+  accessToken: string;
+
+  @Field()
+  refreshToken: string;
 }
 
 @InputType()
 class SignInInput {
   @Field()
-  authType: AuthType;
+  provider: Provider;
 
   @Field({ nullable: true })
   email?: string;
@@ -20,16 +34,19 @@ class SignInInput {
 @InputType()
 class SignUpInput {
   @Field()
-  authType: AuthType;
+  provider: Provider;
 
   @Field()
   email: string;
 
-  @Field()
-  displayName: string;
-
   @Field({ nullable: true })
   password?: string;
+
+  @Field({ nullable: true })
+  displayName?: string;
+
+  @Field({ nullable: true })
+  profileImageUrl?: string;
 }
 
-export { AuthType, SignInInput, SignUpInput };
+export { Provider, Auth, SignInInput, SignUpInput };
