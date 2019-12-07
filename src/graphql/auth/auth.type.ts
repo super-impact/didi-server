@@ -31,9 +31,6 @@ class SignInInput {
 @InputType()
 class SignUpInput {
   @Field()
-  provider: Provider;
-
-  @Field()
   email: string;
 
   @Field({ nullable: true })
@@ -46,4 +43,13 @@ class SignUpInput {
   profileImageUrl?: string;
 }
 
-export { Provider, Auth, SignInInput, SignUpInput };
+@InputType()
+class StartSocialAuthInput {
+  @Field()
+  provider: Provider;
+
+  @Field({ nullable: true })
+  oAuthCode?: string;
+}
+
+export { Provider, Auth, SignInInput, SignUpInput, StartSocialAuthInput };
