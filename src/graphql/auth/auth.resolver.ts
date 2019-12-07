@@ -4,8 +4,7 @@ import { Service } from 'typedi';
 import { AuthService, UserService } from '../../service';
 import { checkCorrectPassword, encryptPassword } from '../../utils';
 import { generateGraphQLError, GraphQLErrorMessage } from '../error';
-import { User } from '../user/user.type';
-import { Auth, Provider, SignInInput, SignUpInput } from './auth.type';
+import { Auth, Provider, SignInInput, SignUpInput, StartSocialAuthInput } from './auth.type';
 
 @Resolver(Auth)
 @Service()
@@ -19,12 +18,13 @@ class AuthResolver {
     const user = await this.userService.getUserByEmail(email);
 
     if (!user) {
-      return generateGraphQLError(GraphQLErrorMessage.NotFoundUser);
+      generateGraphQLError(GraphQLErrorMessage.NotFoundUser);
+      return;
     }
 
-    // TODO(hoon): social auth가 되면 아래 코드를 사용한다.
     if (user.provider !== Provider.Email) {
-      return {} as User;
+      generateGraphQLError(GraphQLErrorMessage.DifferentProvider);
+      return;
     }
 
     const isCorrectPassword = checkCorrectPassword(password, user.passwordSalt, user.passwordHash);
@@ -44,26 +44,45 @@ class AuthResolver {
 
   @Mutation(returns => Auth)
   async signUp(@Arg('signUp') signUp: SignUpInput) {
-    const { provider, email, password, displayName, profileImageUrl } = signUp;
-
-    // TODO(hoon): provider에 따라서 로직을 타게한다.
+    const { email, password, displayName, profileImageUrl } = signUp;
 
     const isExistedUser = await this.userService.isExistedUserByEmail(email);
 
     if (isExistedUser) {
-      return generateGraphQLError(GraphQLErrorMessage.ExistEmail);
+      generateGraphQLError(GraphQLErrorMessage.ExistEmail);
+      return;
     }
 
     const { passwordSalt, passwordHash } = encryptPassword(password);
 
-    const user = await this.userService.createUser({
+    const newUser = await this.userService.createUser({
       email,
       passwordSalt,
       passwordHash,
-      provider,
       displayName,
       profileImageUrl,
+      provider: Provider.Email,
     });
+
+    const { accessToken, refreshToken } = await this.authService.getAuthToken(newUser);
+
+    return {
+      user: newUser,
+      accessToken,
+      refreshToken,
+    };
+  }
+
+  @Mutation(returns => Auth)
+  async startSocialAuth(@Arg('startSocialAuth') startSocialAuth: StartSocialAuthInput) {
+    const { provider, oAuthCode } = startSocialAuth;
+
+    const user = await this.authService.getUserByGoogleAuth(oAuthCode);
+
+    if (user.provider !== provider) {
+      generateGraphQLError(GraphQLErrorMessage.DifferentProvider);
+      return;
+    }
 
     const { accessToken, refreshToken } = await this.authService.getAuthToken(user);
 
