@@ -21,9 +21,6 @@ class Auth {
 
 @InputType()
 class SignInInput {
-  @Field()
-  provider: Provider;
-
   @Field({ nullable: true })
   email?: string;
 
