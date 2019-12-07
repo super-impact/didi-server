@@ -5,6 +5,7 @@ export enum GraphQLErrorMessage {
   NotFoundUser = 'NOT_FOUND_USER',
   NotCorrectPassword = 'NOT_CORRECT_PASSWORD',
   DifferentProvider = 'DIFFERENT_PROVIDER',
+  ExistPost = 'EXIST_POST',
 }
 
 export const generateGraphQLError = (message: string) => {

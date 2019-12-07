@@ -8,6 +8,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 
 import PostLike from './postLike';
@@ -15,6 +16,7 @@ import Topic from './topic';
 import User from './user';
 
 @Entity({ name: 'posts' })
+@Unique(['contentLink'])
 class Post {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -25,7 +27,7 @@ class Post {
   @Column({ name: 'description' })
   description: string;
 
-  @Column({ name: 'content_link' })
+  @Column({ name: 'content_link', unique: true })
   contentLink: string;
 
   @Column({ name: 'thumbnail_image_url' })
@@ -37,15 +39,25 @@ class Post {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @ManyToOne(type => User, user => user.id)
+  @ManyToOne(
+    type => User,
+    user => user.id,
+  )
   @JoinColumn({ name: 'fk_contributor_user_id' })
   contributorUser: User;
 
-  @ManyToMany(type => Topic, topic => topic.name)
+  @ManyToMany(
+    type => Topic,
+    topic => topic.name,
+  )
   @JoinTable({ name: 'posts_topics' })
   topics: Topic[];
 
-  @OneToMany(type => PostLike, postLike => postLike.post, { cascade: true })
+  @OneToMany(
+    type => PostLike,
+    postLike => postLike.post,
+    { cascade: true },
+  )
   postLikes: PostLike[];
 }
 

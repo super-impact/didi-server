@@ -1,5 +1,5 @@
 import { Min } from 'class-validator';
-import { ArgsType, Field, ID, Int, ObjectType } from 'type-graphql';
+import { ArgsType, Field, ID, Int, ObjectType, InputType } from 'type-graphql';
 
 import { User } from '../user/user.type';
 
@@ -10,7 +10,7 @@ class Topic {
 }
 
 @ObjectType()
-export class Post {
+class Post {
   @Field(type => ID)
   id: string;
 
@@ -43,7 +43,7 @@ export class Post {
 }
 
 @ArgsType()
-export class GetPostsArgs {
+class GetPostsArgs {
   @Field(type => Int, { defaultValue: 0 })
   @Min(0)
   skip: number;
@@ -54,7 +54,36 @@ export class GetPostsArgs {
 }
 
 @ArgsType()
-export class GetPostArgs {
+class GetPostArgs {
   @Field(type => String)
   id: string;
 }
+
+@InputType()
+class CreatePostInput {
+  @Field(type => String)
+  title: string;
+
+  @Field(type => String)
+  description: string;
+
+  @Field(type => String)
+  contentLink: string;
+
+  @Field(type => String)
+  thumbnailImageUrl: string;
+
+  @Field(type => String)
+  contentMakerEmail: string;
+
+  @Field(type => [CreatePostTopicInput])
+  topics: CreatePostTopicInput[];
+}
+
+@InputType()
+class CreatePostTopicInput {
+  @Field(type => String)
+  name: string;
+}
+
+export { Post, GetPostsArgs, GetPostArgs, CreatePostInput };

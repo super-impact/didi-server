@@ -26,6 +26,10 @@ class PostRepository extends Repository<Post> {
       },
     });
   }
+
+  public findByContentLink(contentLink: string) {
+    return this.findOne({ contentLink });
+  }
 }
 
 export default PostRepository;

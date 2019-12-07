@@ -26,6 +26,15 @@ class PostService {
 
     return this.postLikeRepository.getLikeCountByPosts(posts);
   }
+
+  public async isExistedPostByContentLink(contentLink: string) {
+    const post = await this.postRepository.findByContentLink(contentLink);
+    return !!post;
+  }
+
+  public async createPost(post: Partial<Post>) {
+    return this.postRepository.save(post);
+  }
 }
 
 export default PostService;
