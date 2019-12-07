@@ -8,7 +8,10 @@ const googleConfig = {
   redirect: GOOGLE_REDIRECT,
 };
 
-const defaultScope = ['https://www.googleapis.com/auth/userinfo.profile'];
+const defaultScope = [
+  'https://www.googleapis.com/auth/userinfo.email',
+  'https://www.googleapis.com/auth/userinfo.profile',
+];
 
 export const googleOAuth2Client = new google.auth.OAuth2(
   googleConfig.clientId,
