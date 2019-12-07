@@ -9,3 +9,9 @@ export const encryptPassword = (plainPassword: string) => {
     passwordHash,
   };
 };
+
+export const checkCorrectPassword = (password: string, passwordSalt: string, passwordHash: string) => {
+  const encryptedPassword = scryptSync(password, passwordSalt, 64).toString('hex');
+
+  return passwordHash === encryptedPassword;
+};
