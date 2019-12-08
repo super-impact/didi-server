@@ -16,7 +16,6 @@ import Topic from './topic';
 import User from './user';
 
 @Entity({ name: 'posts' })
-@Unique(['contentLink'])
 class Post {
   @PrimaryGeneratedColumn('uuid')
   id: string;

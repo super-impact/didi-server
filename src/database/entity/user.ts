@@ -4,7 +4,6 @@ import Post from './post';
 import PostLike from './postLike';
 
 @Entity({ name: 'users' })
-@Unique(['email'])
 class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
