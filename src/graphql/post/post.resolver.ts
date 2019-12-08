@@ -5,6 +5,7 @@ import { PostService } from '../../service';
 import PostDataLoader from './post.dataloader';
 import { GetPostArgs, GetPostsArgs, Post, CreatePostInput } from './post.type';
 import { generateGraphQLError, GraphQLErrorMessage } from '../error';
+import { removeQueryString } from '../../utils';
 
 @Resolver(Post)
 @Service()
@@ -29,7 +30,7 @@ class PostResolver {
   @Mutation(returns => Post)
   async createPost(@Arg('input') input: CreatePostInput) {
     const { title, description, contentLink, thumbnailImageUrl, contentMakerEmail, topics } = input;
-    const pureContentLink = contentLink.split('?')[0];
+    const pureContentLink = removeQueryString(contentLink);
 
     const isExistedPost = await this.postService.isExistedPostByContentLink(pureContentLink);
 
