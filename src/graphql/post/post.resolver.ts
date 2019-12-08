@@ -29,8 +29,9 @@ class PostResolver {
   @Mutation(returns => Post)
   async createPost(@Arg('input') input: CreatePostInput) {
     const { title, description, contentLink, thumbnailImageUrl, contentMakerEmail, topics } = input;
+    const pureContentLink = contentLink.split('?')[0];
 
-    const isExistedPost = await this.postService.isExistedPostByContentLink(contentLink);
+    const isExistedPost = await this.postService.isExistedPostByContentLink(pureContentLink);
 
     if (isExistedPost) {
       return generateGraphQLError(GraphQLErrorMessage.ExistPost);
@@ -46,7 +47,7 @@ class PostResolver {
     return this.postService.createPost({
       title,
       description,
-      contentLink,
+      contentLink: pureContentLink,
       thumbnailImageUrl,
       contentMakerEmail,
       contributorUser: user,
