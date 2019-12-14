@@ -16,11 +16,9 @@ class PostLikeRepository extends Repository<PostLike> {
   }
 
   public async findPostLikeByPostAndUser(post: Post, user: User) {
-    return this.find({
-      where: {
-        post,
-        user,
-      },
+    return this.findOne({
+      post,
+      user,
     });
   }
 }
