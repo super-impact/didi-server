@@ -86,4 +86,10 @@ class CreatePostTopicInput {
   name: string;
 }
 
-export { Post, GetPostsArgs, GetPostArgs, CreatePostInput };
+@InputType()
+class LikePostInput {
+  @Field(type => String)
+  id: string;
+}
+
+export { Post, GetPostsArgs, GetPostArgs, CreatePostInput, LikePostInput };
