@@ -12,8 +12,8 @@ class AuthResolver {
   constructor(private userService: UserService, private authService: AuthService) {}
 
   @Mutation(returns => Auth)
-  async signIn(@Arg('signIn') signIn: SignInInput) {
-    const { email, password } = signIn;
+  async signIn(@Arg('input') input: SignInInput) {
+    const { email, password } = input;
 
     const user = await this.userService.getUserByEmail(email);
 
@@ -43,8 +43,8 @@ class AuthResolver {
   }
 
   @Mutation(returns => Auth)
-  async signUp(@Arg('signUp') signUp: SignUpInput) {
-    const { email, password, displayName, profileImageUrl } = signUp;
+  async signUp(@Arg('input') input: SignUpInput) {
+    const { email, password, displayName, profileImageUrl } = input;
 
     const isExistedUser = await this.userService.isExistedUserByEmail(email);
 
@@ -74,8 +74,8 @@ class AuthResolver {
   }
 
   @Mutation(returns => Auth)
-  async startSocialAuth(@Arg('startSocialAuth') startSocialAuth: StartSocialAuthInput) {
-    const { provider, oAuthCode } = startSocialAuth;
+  async startSocialAuth(@Arg('input') input: StartSocialAuthInput) {
+    const { provider, oAuthCode } = input;
 
     const user = await this.authService.getUserByGoogleAuth(oAuthCode);
 
