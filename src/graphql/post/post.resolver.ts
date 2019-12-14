@@ -67,13 +67,13 @@ class PostResolver {
       createdAt: new Date('2019-12-08 01:24:46.161762'),
     };
 
-    const isExistedPostLike = await this.postService.isExistedPostLike({ postId: id, email: user.email });
+    const isExistedPostLike = await this.postService.isExistedPostLike({ post: { id: input.id }, user });
 
     if (isExistedPostLike) {
       return generateGraphQLError(GraphQLErrorMessage.ExistPostLike);
     }
 
-    return this.postService.likePost({ postId: id, email: user.email });
+    return this.postService.likePost({ post: { id: input.id }, user });
   }
 }
 

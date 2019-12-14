@@ -3,6 +3,7 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 
 import { PostLikeRepository, PostRepository, UserRepository } from '../database/repository';
 import { Post } from '../graphql/post/post.type';
+import { User } from '../graphql/user/user.type';
 
 @Service()
 class PostService {
@@ -37,21 +38,22 @@ class PostService {
     return this.postRepository.save(post);
   }
 
-  public async isExistedPostLike({ postId, email }: { postId: string; email: string }) {
-    const post = await this.postRepository.getPostById(postId);
-    const user = await this.userRepository.findByEmail(email);
+  public async isExistedPostLike({ post, user }: { post: Pick<Post, 'id'>; user: Pick<User, 'id'> }) {
+    const foundPost = await this.postRepository.getPostById(post.id);
+    const foundUser = await this.userRepository.findById(user.id);
 
-    const postLike = await this.postLikeRepository.findPostLikeByPostAndUser(post, user);
+    const postLike = await this.postLikeRepository.findPostLikeByPostAndUser(foundPost, foundUser);
+
     return !!postLike;
   }
 
-  public async likePost({ postId, email }: { postId: string; email: string }) {
-    const post = await this.postRepository.getPostById(postId);
-    const user = await this.userRepository.findByEmail(email);
+  public async likePost({ post, user }: { post: Pick<Post, 'id'>; user: Pick<User, 'id'> }) {
+    const foundPost = await this.postRepository.getPostById(post.id);
+    const foundUser = await this.userRepository.findById(user.id);
 
-    await this.postLikeRepository.save({ post, user });
+    await this.postLikeRepository.save({ post: foundPost, user: foundUser });
 
-    return this.postRepository.getPostById(postId);
+    return this.postRepository.getPostById(post.id);
   }
 }
 
