@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 import { EntityRepository, In, Repository } from 'typeorm';
 
-import { Post, PostLike } from '../entity';
+import { Post, PostLike, User } from '../entity';
 
 @Service()
 @EntityRepository(PostLike)
@@ -11,6 +11,15 @@ class PostLikeRepository extends Repository<PostLike> {
       relations: ['post'],
       where: {
         post: In(posts.map(post => post.id)),
+      },
+    });
+  }
+
+  public async findPostLikeByPostAndUser(post: Post, user: User) {
+    return this.find({
+      where: {
+        post,
+        user,
       },
     });
   }

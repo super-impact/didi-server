@@ -3,7 +3,7 @@ import { Service } from 'typedi';
 
 import { PostService } from '../../service';
 import PostDataLoader from './post.dataloader';
-import { GetPostArgs, GetPostsArgs, Post, CreatePostInput } from './post.type';
+import { GetPostArgs, GetPostsArgs, Post, CreatePostInput, LikePostInput } from './post.type';
 import { generateGraphQLError, GraphQLErrorMessage } from '../error';
 import { removeQueryString } from '../../utils';
 
@@ -54,6 +54,26 @@ class PostResolver {
       contributorUser: user,
       topics,
     });
+  }
+
+  @Mutation(returns => Post)
+  async likePost(@Arg('input') input: LikePostInput) {
+    const { id } = input;
+
+    const user = {
+      id: '0a903479-611f-4848-b03f-9962e330baaf',
+      email: 'jhn3981@gmail.com',
+      displayName: 'jhn3981',
+      createdAt: new Date('2019-12-08 01:24:46.161762'),
+    };
+
+    const isExistedPostLike = await this.postService.isExistedPostLike({ postId: id, email: user.email });
+
+    if (isExistedPostLike) {
+      return generateGraphQLError(GraphQLErrorMessage.ExistPostLike);
+    }
+
+    return this.postService.likePost({ postId: id, email: user.email });
   }
 }
 
