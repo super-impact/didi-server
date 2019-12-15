@@ -14,10 +14,6 @@ class UserRepository extends Repository<User> {
     return this.findOne({ email });
   }
 
-  public findById(id: string) {
-    return this.findOne({ id });
-  }
-
   public async isExistedUserByEmail(email: string) {
     const isExistedUser = await this.findOne({ email });
 
