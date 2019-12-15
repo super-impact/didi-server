@@ -30,6 +30,18 @@ class PostRepository extends Repository<Post> {
   public findByContentLink(contentLink: string) {
     return this.findOne({ contentLink });
   }
+
+  public async isExistedPostByContentLink(contentLink: string) {
+    const post = await this.findOne({ contentLink });
+
+    return !!post;
+  }
+
+  public async isExistedPostById(id: string) {
+    const isExistedPost = await this.findOne({ id });
+
+    return !!isExistedPost;
+  }
 }
 
 export default PostRepository;

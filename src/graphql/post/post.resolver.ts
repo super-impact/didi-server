@@ -2,6 +2,7 @@ import { Args, FieldResolver, Query, Resolver, Root, Mutation, Arg } from 'type-
 import { Service } from 'typedi';
 
 import { PostService } from '../../service';
+import { UserRepository, PostRepository, PostLikeRepository } from '../../database/repository';
 import PostDataLoader from './post.dataloader';
 import { GetPostArgs, GetPostsArgs, Post, CreatePostInput, LikePostInput } from './post.type';
 import { generateGraphQLError, GraphQLErrorMessage } from '../error';
@@ -10,7 +11,13 @@ import { removeQueryString } from '../../utils';
 @Resolver(Post)
 @Service()
 class PostResolver {
-  constructor(private postService: PostService, private postDataLoader: PostDataLoader) {}
+  constructor(
+    private postService: PostService,
+    private postDataLoader: PostDataLoader,
+    private userRepository: UserRepository,
+    private postRepository: PostRepository,
+    private postLikeRepository: PostLikeRepository,
+  ) {}
 
   @Query(returns => [Post])
   async posts(@Args() { skip, take }: GetPostsArgs) {
@@ -32,7 +39,7 @@ class PostResolver {
     const { title, description, contentLink, thumbnailImageUrl, contentMakerEmail, topics } = input;
     const pureContentLink = removeQueryString(contentLink);
 
-    const isExistedPost = await this.postService.isExistedPostByContentLink(pureContentLink);
+    const isExistedPost = await this.postRepository.isExistedPostByContentLink(pureContentLink);
 
     if (isExistedPost) {
       return generateGraphQLError(GraphQLErrorMessage.ExistPost);
@@ -65,19 +72,22 @@ class PostResolver {
       createdAt: new Date('2019-12-08 01:24:46.161762'),
     };
 
-    const isExistedUser = await this.postService.isExistedUserById(user.id);
+    const isExistedUser = await this.userRepository.isExistedUserById(user.id);
 
     if (!isExistedUser) {
       return generateGraphQLError(GraphQLErrorMessage.NotFoundUser);
     }
 
-    const isExistedPost = await this.postService.isExistedPostById(input.id);
+    const isExistedPost = await this.postRepository.isExistedPostById(input.id);
 
     if (!isExistedPost) {
       return generateGraphQLError(GraphQLErrorMessage.NotFoundPost);
     }
 
-    const isExistedPostLike = await this.postService.isExistedPostLikeByPostAndUser({ post: { id: input.id }, user });
+    const isExistedPostLike = await this.postLikeRepository.isExistedPostLikeByPostAndUser({
+      post: { id: input.id },
+      user,
+    });
 
     if (isExistedPostLike) {
       return generateGraphQLError(GraphQLErrorMessage.ExistPostLike);

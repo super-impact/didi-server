@@ -15,11 +15,10 @@ class PostLikeRepository extends Repository<PostLike> {
     });
   }
 
-  public async findPostLikeByPostAndUser(post: Partial<Post>, user: Partial<User>) {
-    return this.findOne({
-      post,
-      user,
-    });
+  public async isExistedPostLikeByPostAndUser({ post, user }: { post: Pick<Post, 'id'>; user: Pick<User, 'id'> }) {
+    const postLike = await this.findOne({ post, user });
+
+    return !!postLike;
   }
 }
 

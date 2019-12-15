@@ -8,11 +8,6 @@ import { UserRepository } from '../database/repository';
 class UserService {
   constructor(@InjectRepository() private readonly userRepository: UserRepository) {}
 
-  public async isExistedUserByEmail(email: string) {
-    const isExistedUser = await this.userRepository.findByEmail(email);
-    return !!isExistedUser;
-  }
-
   public async createUser(user: Partial<User>) {
     return this.userRepository.save(user);
   }
