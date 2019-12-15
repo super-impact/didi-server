@@ -1,4 +1,4 @@
-import { Args, FieldResolver, Query, Resolver, Root, Mutation, Arg } from 'type-graphql';
+import { Args, FieldResolver, Query, Resolver, Root, Mutation, Arg, Ctx } from 'type-graphql';
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 
@@ -8,6 +8,7 @@ import PostDataLoader from './post.dataloader';
 import { GetPostArgs, GetPostsArgs, Post, CreatePostInput, LikePostInput } from './post.type';
 import { generateGraphQLError, GraphQLErrorMessage } from '../error';
 import { removeQueryString } from '../../utils';
+import { ContextType } from '../../middlewares/auth.mididleware';
 
 @Resolver(Post)
 @Service()
@@ -36,9 +37,16 @@ class PostResolver {
   }
 
   @Mutation(returns => Post)
-  async createPost(@Arg('input') input: CreatePostInput) {
+  async createPost(@Ctx() context: ContextType, @Arg('input') input: CreatePostInput) {
+    const { id: userId } = context.token;
     const { title, description, contentLink, thumbnailImageUrl, contentMakerEmail, topics } = input;
     const pureContentLink = removeQueryString(contentLink);
+
+    const isExistedUser = await this.userRepository.isExistedUserById(userId);
+
+    if (!isExistedUser) {
+      return generateGraphQLError(GraphQLErrorMessage.NotFoundUser);
+    }
 
     const isExistedPost = await this.postRepository.isExistedPostByContentLink(pureContentLink);
 
@@ -46,12 +54,7 @@ class PostResolver {
       return generateGraphQLError(GraphQLErrorMessage.ExistPost);
     }
 
-    const user = {
-      id: '0a903479-611f-4848-b03f-9962e330baaf',
-      email: 'jhn3981@gmail.com',
-      displayName: 'jhn3981',
-      createdAt: new Date('2019-12-08 01:24:46.161762'),
-    };
+    const user = await this.userRepository.findById(userId);
 
     return this.postService.createPost({
       title,
@@ -65,15 +68,10 @@ class PostResolver {
   }
 
   @Mutation(returns => Post)
-  async likePost(@Arg('input') input: LikePostInput) {
-    const user = {
-      id: '0a903479-611f-4848-b03f-9962e330baaf',
-      email: 'jhn3981@gmail.com',
-      displayName: 'jhn3981',
-      createdAt: new Date('2019-12-08 01:24:46.161762'),
-    };
+  async likePost(@Ctx() context: ContextType, @Arg('input') input: LikePostInput) {
+    const { id: userId } = context.token;
 
-    const isExistedUser = await this.userRepository.isExistedUserById(user.id);
+    const isExistedUser = await this.userRepository.isExistedUserById(userId);
 
     if (!isExistedUser) {
       return generateGraphQLError(GraphQLErrorMessage.NotFoundUser);
@@ -87,14 +85,14 @@ class PostResolver {
 
     const isExistedPostLike = await this.postLikeRepository.isExistedPostLikeByPostAndUser({
       post: { id: input.id },
-      user,
+      user: { id: userId },
     });
 
     if (isExistedPostLike) {
       return generateGraphQLError(GraphQLErrorMessage.ExistPostLike);
     }
 
-    return this.postService.likePost({ post: { id: input.id }, user });
+    return this.postService.likePost({ post: { id: input.id }, user: { id: userId } });
   }
 }
 
