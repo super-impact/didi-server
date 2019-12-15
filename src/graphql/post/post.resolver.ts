@@ -59,7 +59,7 @@ class PostResolver {
   @Mutation(returns => Post)
   async likePost(@Arg('input') input: LikePostInput) {
     const user = {
-      id: '0a903479-611f-4848-b03f-9962e330ba1f',
+      id: '0a903479-611f-4848-b03f-9962e330baaf',
       email: 'jhn3981@gmail.com',
       displayName: 'jhn3981',
       createdAt: new Date('2019-12-08 01:24:46.161762'),

@@ -15,7 +15,7 @@ class PostLikeRepository extends Repository<PostLike> {
     });
   }
 
-  public async findPostLikeByPostAndUser(post: Post, user: User) {
+  public async findPostLikeByPostAndUser(post: Partial<Post>, user: Partial<User>) {
     return this.findOne({
       post,
       user,
