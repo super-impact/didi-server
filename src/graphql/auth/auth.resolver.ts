@@ -2,6 +2,7 @@ import { Arg, Mutation, Resolver } from 'type-graphql';
 import { Service } from 'typedi';
 
 import { AuthService, UserService } from '../../service';
+import { UserRepository } from '../../database/repository';
 import { checkCorrectPassword, encryptPassword } from '../../utils';
 import { generateGraphQLError, GraphQLErrorMessage } from '../error';
 import { Auth, Provider, SignInInput, SignUpInput, StartSocialAuthInput } from './auth.type';
@@ -9,7 +10,11 @@ import { Auth, Provider, SignInInput, SignUpInput, StartSocialAuthInput } from '
 @Resolver(Auth)
 @Service()
 class AuthResolver {
-  constructor(private userService: UserService, private authService: AuthService) {}
+  constructor(
+    private userService: UserService,
+    private authService: AuthService,
+    private userRepository: UserRepository,
+  ) {}
 
   @Mutation(returns => Auth)
   async signIn(@Arg('signIn') signIn: SignInInput) {
@@ -46,7 +51,7 @@ class AuthResolver {
   async signUp(@Arg('signUp') signUp: SignUpInput) {
     const { email, password, displayName, profileImageUrl } = signUp;
 
-    const isExistedUser = await this.userService.isExistedUserByEmail(email);
+    const isExistedUser = await this.userRepository.isExistedUserByEmail(email);
 
     if (isExistedUser) {
       generateGraphQLError(GraphQLErrorMessage.ExistEmail);

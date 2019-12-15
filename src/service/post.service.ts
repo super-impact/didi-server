@@ -29,29 +29,8 @@ class PostService {
     return this.postLikeRepository.getLikeCountByPosts(posts);
   }
 
-  public async isExistedPostByContentLink(contentLink: string) {
-    const post = await this.postRepository.findByContentLink(contentLink);
-    return !!post;
-  }
-
   public async createPost(post: Partial<Post>) {
     return this.postRepository.save(post);
-  }
-
-  public async isExistedUserById(id: string) {
-    const isExistedUser = await this.userRepository.findById(id);
-    return !!isExistedUser;
-  }
-
-  public async isExistedPostById(id: string) {
-    const isExistedPost = await this.postRepository.getPostById(id);
-    return !!isExistedPost;
-  }
-
-  public async isExistedPostLikeByPostAndUser({ post, user }: { post: Pick<Post, 'id'>; user: Pick<User, 'id'> }) {
-    const postLike = await this.postLikeRepository.findPostLikeByPostAndUser(post, user);
-
-    return !!postLike;
   }
 
   public async likePost({ post, user }: { post: Pick<Post, 'id'>; user: Pick<User, 'id'> }) {
