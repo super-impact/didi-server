@@ -7,8 +7,7 @@ export enum GraphQLErrorMessage {
   DifferentProvider = 'DIFFERENT_PROVIDER',
   ExistPost = 'EXIST_POST',
   ExistPostLike = 'EXIST_POST_LIKE',
-  IsNotExistUser = 'IS_NOT_EXIST_USER',
-  IsNotExistPost = 'IS_NOT_EXIST_POST',
+  NotFoundPost = 'NOT_FOUND_POST',
 }
 
 export const generateGraphQLError = (message: string) => {
