@@ -10,6 +10,7 @@ import Container from 'typedi';
 import { Routes } from './controllers';
 import { connectDatabase } from './database/connection';
 import graphqlSchema from './graphql';
+import { jwtAuthMiddleware } from './middlewares/auth.mididleware';
 import { logger } from './utils/logger';
 
 class Server {
@@ -20,7 +21,10 @@ class Server {
   constructor() {
     this.app = new Koa();
     this.router = new Router();
-    this.apolloServer = new ApolloServer({ schema: graphqlSchema });
+    this.apolloServer = new ApolloServer({
+      schema: graphqlSchema,
+      context: jwtAuthMiddleware,
+    });
   }
 
   private setMiddlewares() {
