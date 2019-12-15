@@ -38,6 +38,16 @@ class PostService {
     return this.postRepository.save(post);
   }
 
+  public async isExistedUserById(id: string) {
+    const isExistedUser = await this.userRepository.findById(id);
+    return !!isExistedUser;
+  }
+
+  public async isExistedPostById(id: string) {
+    const isExistedPost = await this.postRepository.getPostById(id);
+    return !!isExistedPost;
+  }
+
   public async isExistedPostLikeByPostAndUser({ post, user }: { post: Pick<Post, 'id'>; user: Pick<User, 'id'> }) {
     const foundPost = await this.postRepository.getPostById(post.id);
     const foundUser = await this.userRepository.findById(user.id);
