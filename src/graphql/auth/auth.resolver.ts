@@ -1,5 +1,6 @@
 import { Arg, Mutation, Resolver } from 'type-graphql';
 import { Service } from 'typedi';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
 import { AuthService, UserService } from '../../service';
 import { UserRepository } from '../../database/repository';
@@ -13,7 +14,7 @@ class AuthResolver {
   constructor(
     private userService: UserService,
     private authService: AuthService,
-    private userRepository: UserRepository,
+    @InjectRepository() private readonly userRepository: UserRepository,
   ) {}
 
   @Mutation(returns => Auth)
