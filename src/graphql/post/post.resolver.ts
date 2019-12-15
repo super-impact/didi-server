@@ -58,14 +58,24 @@ class PostResolver {
 
   @Mutation(returns => Post)
   async likePost(@Arg('input') input: LikePostInput) {
-    const { id } = input;
-
     const user = {
-      id: '0a903479-611f-4848-b03f-9962e330baaf',
+      id: '0a903479-611f-4848-b03f-9962e330ba1f',
       email: 'jhn3981@gmail.com',
       displayName: 'jhn3981',
       createdAt: new Date('2019-12-08 01:24:46.161762'),
     };
+
+    const isExistedUser = await this.postService.isExistedUserById(user.id);
+
+    if (!isExistedUser) {
+      return generateGraphQLError(GraphQLErrorMessage.IsNotExistUser);
+    }
+
+    const isExistedPost = await this.postService.isExistedPostById(input.id);
+
+    if (!isExistedPost) {
+      return generateGraphQLError(GraphQLErrorMessage.IsNotExistPost);
+    }
 
     const isExistedPostLike = await this.postService.isExistedPostLikeByPostAndUser({ post: { id: input.id }, user });
 
