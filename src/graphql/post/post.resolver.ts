@@ -1,5 +1,6 @@
 import { Args, FieldResolver, Query, Resolver, Root, Mutation, Arg } from 'type-graphql';
 import { Service } from 'typedi';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
 import { PostService } from '../../service';
 import { UserRepository, PostRepository, PostLikeRepository } from '../../database/repository';
@@ -14,9 +15,9 @@ class PostResolver {
   constructor(
     private postService: PostService,
     private postDataLoader: PostDataLoader,
-    private userRepository: UserRepository,
-    private postRepository: PostRepository,
-    private postLikeRepository: PostLikeRepository,
+    @InjectRepository() private readonly userRepository: UserRepository,
+    @InjectRepository() private readonly postRepository: PostRepository,
+    @InjectRepository() private readonly postLikeRepository: PostLikeRepository,
   ) {}
 
   @Query(returns => [Post])
