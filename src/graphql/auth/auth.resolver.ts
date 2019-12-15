@@ -24,13 +24,11 @@ class AuthResolver {
     const user = await this.userService.getUserByEmail(email);
 
     if (!user) {
-      generateGraphQLError(GraphQLErrorMessage.NotFoundUser);
-      return;
+      return generateGraphQLError(GraphQLErrorMessage.NotFoundUser);
     }
 
     if (user.provider !== Provider.Email) {
-      generateGraphQLError(GraphQLErrorMessage.DifferentProvider);
-      return;
+      return generateGraphQLError(GraphQLErrorMessage.DifferentProvider);
     }
 
     const isCorrectPassword = checkCorrectPassword(password, user.passwordSalt, user.passwordHash);
@@ -55,8 +53,7 @@ class AuthResolver {
     const isExistedUser = await this.userRepository.isExistedUserByEmail(email);
 
     if (isExistedUser) {
-      generateGraphQLError(GraphQLErrorMessage.ExistEmail);
-      return;
+      return generateGraphQLError(GraphQLErrorMessage.ExistEmail);
     }
 
     const { passwordSalt, passwordHash } = encryptPassword(password);
@@ -86,8 +83,7 @@ class AuthResolver {
     const user = await this.authService.getUserByGoogleAuth(oAuthCode);
 
     if (user.provider !== provider) {
-      generateGraphQLError(GraphQLErrorMessage.DifferentProvider);
-      return;
+      return generateGraphQLError(GraphQLErrorMessage.DifferentProvider);
     }
 
     const { accessToken, refreshToken } = await this.authService.getAuthToken(user);

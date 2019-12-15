@@ -21,8 +21,7 @@ class UserService {
     const foundUser = await this.userRepository.findById(user.id);
 
     if (!foundUser) {
-      generateGraphQLError(GraphQLErrorMessage.NotFoundUser);
-      return;
+      return generateGraphQLError(GraphQLErrorMessage.NotFoundUser);
     }
 
     return foundUser;
