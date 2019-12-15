@@ -20,7 +20,7 @@ export async function generateAccessToken(payload: { id: string }) {
   }
 }
 
-export async function verfiyAccessToken(accessToken: string) {
+export function verfiyAccessToken(accessToken: string) {
   try {
     return jwt.verify(accessToken, JWT_SECRET_KEY);
   } catch (error) {
