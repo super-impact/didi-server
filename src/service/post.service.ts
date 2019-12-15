@@ -38,7 +38,7 @@ class PostService {
     return this.postRepository.save(post);
   }
 
-  public async isExistedPostLike({ post, user }: { post: Pick<Post, 'id'>; user: Pick<User, 'id'> }) {
+  public async isExistedPostLikeByPostAndUser({ post, user }: { post: Pick<Post, 'id'>; user: Pick<User, 'id'> }) {
     const foundPost = await this.postRepository.getPostById(post.id);
     const foundUser = await this.userRepository.findById(user.id);
 
