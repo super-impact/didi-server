@@ -68,13 +68,13 @@ class PostResolver {
     const isExistedUser = await this.postService.isExistedUserById(user.id);
 
     if (!isExistedUser) {
-      return generateGraphQLError(GraphQLErrorMessage.IsNotExistUser);
+      return generateGraphQLError(GraphQLErrorMessage.NotFoundUser);
     }
 
     const isExistedPost = await this.postService.isExistedPostById(input.id);
 
     if (!isExistedPost) {
-      return generateGraphQLError(GraphQLErrorMessage.IsNotExistPost);
+      return generateGraphQLError(GraphQLErrorMessage.NotFoundPost);
     }
 
     const isExistedPostLike = await this.postService.isExistedPostLikeByPostAndUser({ post: { id: input.id }, user });
