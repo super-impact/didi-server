@@ -62,7 +62,7 @@ class PostService {
       return generateGraphQLError(GraphQLErrorMessage.NoPermission);
     }
 
-    await this.postRepository.update({ id: post.id }, { isDeleted: true, deletedAt: new Date().toUTCString() });
+    await this.postRepository.update({ id: post.id }, { isDeleted: true, deletedAt: new Date() });
 
     return this.postRepository.getPostById(post.id);
   }
