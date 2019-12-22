@@ -1,4 +1,4 @@
-import { Args, FieldResolver, Query, Resolver, Root, Mutation, Arg, Ctx } from 'type-graphql';
+import { Args, FieldResolver, Query, Resolver, Root, Mutation, Arg, Ctx, Authorized } from 'type-graphql';
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 
@@ -95,23 +95,12 @@ class PostResolver {
     return this.postService.likePost({ post: { id: input.id }, user: { id: userId } });
   }
 
+  @Authorized()
   @Mutation(returns => Post)
   async deletePost(@Ctx() context: ContextType, @Arg('input') input: DeletePostInput) {
     const { id: userId } = context.token;
 
-    const isExistedUser = await this.userRepository.isExistedUserById(userId);
-
-    if (!isExistedUser) {
-      return generateGraphQLError(GraphQLErrorMessage.NotFoundUser);
-    }
-
-    const isExistedPost = await this.postRepository.isExistedPostById(input.id);
-
-    if (!isExistedPost) {
-      return generateGraphQLError(GraphQLErrorMessage.NotFoundPost);
-    }
-
-    return this.postService.deletePost({ post: { id: input.id } });
+    return this.postService.deletePost({ post: { id: input.id }, user: { id: userId } });
   }
 }
 
