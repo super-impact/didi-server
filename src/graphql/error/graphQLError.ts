@@ -8,6 +8,7 @@ export enum GraphQLErrorMessage {
   ExistPost = 'EXIST_POST',
   ExistPostLike = 'EXIST_POST_LIKE',
   NotFoundPost = 'NOT_FOUND_POST',
+  NoPermission = 'NO_PERMISSION',
 }
 
 export const generateGraphQLError = (message: string) => {
