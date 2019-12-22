@@ -1,6 +1,11 @@
 import { randomFillSync, scryptSync } from 'crypto';
 
-export const encryptPassword = (plainPassword: string) => {
+export const encryptPassword = (
+  plainPassword: string,
+): {
+  passwordSalt: string;
+  passwordHash: string;
+} => {
   const passwordSalt = randomFillSync(Buffer.alloc(64)).toString('hex');
   const passwordHash = scryptSync(plainPassword, passwordSalt, 64).toString('hex');
 
@@ -10,7 +15,7 @@ export const encryptPassword = (plainPassword: string) => {
   };
 };
 
-export const checkCorrectPassword = (password: string, passwordSalt: string, passwordHash: string) => {
+export const checkCorrectPassword = (password: string, passwordSalt: string, passwordHash: string): boolean => {
   const encryptedPassword = scryptSync(password, passwordSalt, 64).toString('hex');
 
   return passwordHash === encryptedPassword;
