@@ -32,13 +32,13 @@ class PostRepository extends Repository<Post> {
   }
 
   public async isExistedPostByContentLink(contentLink: string) {
-    const post = await this.findOne({ contentLink });
+    const post = await this.findOne({ contentLink, isDeleted: false });
 
     return !!post;
   }
 
   public async isExistedPostById(id: string) {
-    const isExistedPost = await this.findOne({ id });
+    const isExistedPost = await this.findOne({ id, isDeleted: false });
 
     return !!isExistedPost;
   }

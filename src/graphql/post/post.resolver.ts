@@ -5,7 +5,7 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import { PostService } from '../../service';
 import { UserRepository, PostRepository, PostLikeRepository } from '../../database/repository';
 import PostDataLoader from './post.dataloader';
-import { GetPostArgs, GetPostsArgs, Post, CreatePostInput, LikePostInput } from './post.type';
+import { GetPostArgs, GetPostsArgs, Post, CreatePostInput, LikePostInput, DeletePostInput } from './post.type';
 import { generateGraphQLError, GraphQLErrorMessage } from '../error';
 import { removeQueryString } from '../../utils';
 import { ContextType } from '../../middlewares/auth.mididleware';
@@ -93,6 +93,25 @@ class PostResolver {
     }
 
     return this.postService.likePost({ post: { id: input.id }, user: { id: userId } });
+  }
+
+  @Mutation(returns => Post)
+  async deletePost(@Ctx() context: ContextType, @Arg('input') input: DeletePostInput) {
+    const { id: userId } = context.token;
+
+    const isExistedUser = await this.userRepository.isExistedUserById(userId);
+
+    if (!isExistedUser) {
+      return generateGraphQLError(GraphQLErrorMessage.NotFoundUser);
+    }
+
+    const isExistedPost = await this.postRepository.isExistedPostById(input.id);
+
+    if (!isExistedPost) {
+      return generateGraphQLError(GraphQLErrorMessage.NotFoundPost);
+    }
+
+    return this.postService.deletePost({ post: { id: input.id } });
   }
 }
 
