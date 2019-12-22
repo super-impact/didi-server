@@ -35,28 +35,24 @@ class Post {
   @Column({ name: 'content_maker_email' })
   contentMakerEmail: string;
 
+  @Column({ name: 'is_deleted', default: false })
+  isDeleted: boolean;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @ManyToOne(
-    type => User,
-    user => user.id,
-  )
+  @Column({ name: 'deleted_at', nullable: true })
+  deletedAt?: Date;
+
+  @ManyToOne(type => User, user => user.id)
   @JoinColumn({ name: 'fk_contributor_user_id' })
   contributorUser: User;
 
-  @ManyToMany(
-    type => Topic,
-    topic => topic.name,
-  )
+  @ManyToMany(type => Topic, topic => topic.name)
   @JoinTable({ name: 'posts_topics' })
   topics: Topic[];
 
-  @OneToMany(
-    type => PostLike,
-    postLike => postLike.post,
-    { cascade: true },
-  )
+  @OneToMany(type => PostLike, postLike => postLike.post, { cascade: true })
   postLikes: PostLike[];
 }
 

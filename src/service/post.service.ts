@@ -38,6 +38,12 @@ class PostService {
 
     return this.postRepository.getPostById(post.id);
   }
+
+  public async deletePost({ post }: { post: Pick<Post, 'id'> }) {
+    await this.postRepository.update({ id: post.id }, { isDeleted: true, deletedAt: new Date().toUTCString() });
+
+    return this.postRepository.getPostById(post.id);
+  }
 }
 
 export default PostService;

@@ -92,4 +92,10 @@ class LikePostInput {
   id: string;
 }
 
-export { Post, GetPostsArgs, GetPostArgs, CreatePostInput, LikePostInput };
+@InputType()
+class DeletePostInput {
+  @Field(type => String)
+  id: string;
+}
+
+export { Post, GetPostsArgs, GetPostArgs, CreatePostInput, LikePostInput, DeletePostInput };
