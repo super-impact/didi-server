@@ -53,6 +53,15 @@ class PostService {
       return generateGraphQLError(GraphQLErrorMessage.NotFoundUser);
     }
 
+    const isCorrectPostContributorUser = await this.postRepository.isCorrectPostContributorUser({
+      postId: post.id,
+      userId: user.id,
+    });
+
+    if (!isCorrectPostContributorUser) {
+      return generateGraphQLError(GraphQLErrorMessage.NoPermission);
+    }
+
     await this.postRepository.update({ id: post.id }, { isDeleted: true, deletedAt: new Date().toUTCString() });
 
     return this.postRepository.getPostById(post.id);

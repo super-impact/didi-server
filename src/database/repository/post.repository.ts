@@ -42,6 +42,19 @@ class PostRepository extends Repository<Post> {
 
     return !!isExistedPost;
   }
+
+  public async isCorrectPostContributorUser({ postId, userId }: { postId: string; userId: string }) {
+    const foundPost = await this.findOne({
+      where: {
+        id: postId,
+        contributorUser: {
+          id: userId,
+        },
+      },
+    });
+
+    return !!foundPost;
+  }
 }
 
 export default PostRepository;
