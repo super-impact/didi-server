@@ -4,6 +4,7 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import { PostLikeRepository, PostRepository, UserRepository } from '../database/repository';
 import { Post } from '../graphql/post/post.type';
 import { User } from '../graphql/user/user.type';
+import { GraphQLErrorMessage, generateGraphQLError } from '../graphql/error';
 
 @Service()
 class PostService {
@@ -39,7 +40,19 @@ class PostService {
     return this.postRepository.getPostById(post.id);
   }
 
-  public async deletePost({ post }: { post: Pick<Post, 'id'> }) {
+  public async deletePost({ post, user }: { post: Pick<Post, 'id'>; user: Pick<User, 'id'> }) {
+    const isExistedPost = await this.postRepository.isExistedPostById(post.id);
+
+    if (!isExistedPost) {
+      return generateGraphQLError(GraphQLErrorMessage.NotFoundPost);
+    }
+
+    const isExistedUser = await this.userRepository.isExistedUserById(user.id);
+
+    if (!isExistedUser) {
+      return generateGraphQLError(GraphQLErrorMessage.NotFoundUser);
+    }
+
     await this.postRepository.update({ id: post.id }, { isDeleted: true, deletedAt: new Date().toUTCString() });
 
     return this.postRepository.getPostById(post.id);
