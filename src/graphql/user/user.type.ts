@@ -12,5 +12,8 @@ export class User {
   displayName: string;
 
   @Field()
+  profileImageUrl: string;
+
+  @Field()
   createdAt: Date;
 }
