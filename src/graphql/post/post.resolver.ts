@@ -1,14 +1,22 @@
-import { Args, FieldResolver, Query, Resolver, Root, Mutation, Arg, Ctx, Authorized } from 'type-graphql';
+import { Arg, Args, Authorized, Ctx, FieldResolver, Mutation, Query, Resolver, Root } from 'type-graphql';
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 
-import { PostService } from '../../service';
-import { UserRepository, PostRepository, PostLikeRepository } from '../../database/repository';
-import PostDataLoader from './post.dataloader';
-import { GetPostArgs, GetPostsArgs, Post, CreatePostInput, LikePostInput, DeletePostInput } from './post.type';
-import { generateGraphQLError, GraphQLErrorMessage } from '../error';
-import { removeQueryString } from '../../utils';
+import { PostLikeRepository, PostRepository, UserRepository } from '../../database/repository';
 import { ContextType } from '../../middlewares/auth.mididleware';
+import { PostService } from '../../service';
+import { removeQueryString } from '../../utils';
+import { generateGraphQLError, GraphQLErrorMessage } from '../error';
+import PostDataLoader from './post.dataloader';
+import {
+  CheckDuplicationContentLinkInput,
+  CreatePostInput,
+  DeletePostInput,
+  GetPostArgs,
+  GetPostsArgs,
+  LikePostInput,
+  Post,
+} from './post.type';
 
 @Resolver(Post)
 @Service()
@@ -65,6 +73,23 @@ class PostResolver {
       contributorUser: user,
       topics,
     });
+  }
+
+  @Mutation(returns => Boolean)
+  async checkDuplicationContentLink(
+    @Ctx() context: ContextType,
+    @Arg('input') input: CheckDuplicationContentLinkInput,
+  ) {
+    const { id: userId } = context.token;
+    const pureContentLink = removeQueryString(input.contentLink);
+
+    const isExistedUser = await this.userRepository.isExistedUserById(userId);
+
+    if (!isExistedUser) {
+      return generateGraphQLError(GraphQLErrorMessage.NotFoundUser);
+    }
+
+    return this.postRepository.isExistedPostByContentLink(pureContentLink);
   }
 
   @Mutation(returns => Post)

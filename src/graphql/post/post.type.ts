@@ -1,5 +1,5 @@
 import { Min } from 'class-validator';
-import { ArgsType, Field, ID, Int, ObjectType, InputType } from 'type-graphql';
+import { ArgsType, Field, ID, InputType, Int, ObjectType } from 'type-graphql';
 
 import { User } from '../user/user.type';
 
@@ -98,4 +98,18 @@ class DeletePostInput {
   id: string;
 }
 
-export { Post, GetPostsArgs, GetPostArgs, CreatePostInput, LikePostInput, DeletePostInput };
+@InputType()
+class CheckDuplicationContentLinkInput {
+  @Field(type => String)
+  contentLink: string;
+}
+
+export {
+  Post,
+  GetPostsArgs,
+  GetPostArgs,
+  CreatePostInput,
+  LikePostInput,
+  DeletePostInput,
+  CheckDuplicationContentLinkInput,
+};
