@@ -60,6 +60,12 @@ class GetPostArgs {
 }
 
 @InputType()
+class CreatePostTopicInput {
+  @Field(type => String)
+  name: string;
+}
+
+@InputType()
 class CreatePostInput {
   @Field(type => String)
   title: string;
@@ -78,12 +84,6 @@ class CreatePostInput {
 
   @Field(type => [CreatePostTopicInput])
   topics: CreatePostTopicInput[];
-}
-
-@InputType()
-class CreatePostTopicInput {
-  @Field(type => String)
-  name: string;
 }
 
 @InputType()
