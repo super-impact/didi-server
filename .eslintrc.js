@@ -14,5 +14,6 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/camelcase': 'off',
+    'prettier/prettier': 'off',
   },
 };
