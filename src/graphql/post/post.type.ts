@@ -23,11 +23,11 @@ class Post {
   @Field()
   contentLink: string;
 
-  @Field()
-  thumbnailImageUrl: string;
+  @Field({ nullable: true })
+  thumbnailImageUrl?: string;
 
-  @Field()
-  contentMakerEmail: string;
+  @Field({ nullable: true })
+  contentMakerEmail?: string;
 
   @Field()
   createdAt: Date;
@@ -67,20 +67,20 @@ class CreatePostTopicInput {
 
 @InputType()
 class CreatePostInput {
-  @Field(type => String)
+  @Field()
   title: string;
 
-  @Field(type => String)
+  @Field()
   description: string;
 
-  @Field(type => String)
+  @Field()
   contentLink: string;
 
-  @Field(type => String)
-  thumbnailImageUrl: string;
+  @Field({ nullable: true })
+  thumbnailImageUrl?: string;
 
-  @Field(type => String)
-  contentMakerEmail: string;
+  @Field({ nullable: true })
+  contentMakerEmail?: string;
 
   @Field(type => [CreatePostTopicInput])
   topics: CreatePostTopicInput[];

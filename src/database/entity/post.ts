@@ -8,7 +8,6 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  Unique,
 } from 'typeorm';
 
 import PostLike from './postLike';
@@ -29,11 +28,11 @@ class Post {
   @Column({ name: 'content_link', unique: true })
   contentLink: string;
 
-  @Column({ name: 'thumbnail_image_url' })
-  thumbnailImageUrl: string;
+  @Column({ name: 'thumbnail_image_url', nullable: true })
+  thumbnailImageUrl?: string;
 
-  @Column({ name: 'content_maker_email' })
-  contentMakerEmail: string;
+  @Column({ name: 'content_maker_email', nullable: true })
+  contentMakerEmail?: string;
 
   @Column({ name: 'is_deleted', default: false })
   isDeleted: boolean;
@@ -44,15 +43,25 @@ class Post {
   @Column({ name: 'deleted_at', nullable: true })
   deletedAt?: Date;
 
-  @ManyToOne(type => User, user => user.id)
+  @ManyToOne(
+    type => User,
+    user => user.id,
+  )
   @JoinColumn({ name: 'fk_contributor_user_id' })
   contributorUser: User;
 
-  @ManyToMany(type => Topic, topic => topic.name)
+  @ManyToMany(
+    type => Topic,
+    topic => topic.name,
+  )
   @JoinTable({ name: 'posts_topics' })
   topics: Topic[];
 
-  @OneToMany(type => PostLike, postLike => postLike.post, { cascade: true })
+  @OneToMany(
+    type => PostLike,
+    postLike => postLike.post,
+    { cascade: true },
+  )
   postLikes: PostLike[];
 }
 
