@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from 'type-graphql';
+import { ArgsType, Field, ID, ObjectType } from 'type-graphql';
 
 import { Post } from '../post/post.type';
 
@@ -24,4 +24,10 @@ export class User {
 
   @Field(type => [Post])
   likePosts: Post[];
+}
+
+@ArgsType()
+export class UserArgs {
+  @Field(type => String)
+  id: string;
 }

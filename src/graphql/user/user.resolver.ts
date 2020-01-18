@@ -1,11 +1,11 @@
-import { Authorized, Ctx, FieldResolver, Query, Resolver, Root } from 'type-graphql';
+import { Args, Authorized, Ctx, FieldResolver, Query, Resolver, Root } from 'type-graphql';
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 
 import { PostLikeRepository } from '../../database/repository';
 import { ContextType } from '../../middlewares/auth.mididleware';
 import { UserService } from '../../service';
-import { User } from './user.type';
+import { User, UserArgs } from './user.type';
 
 @Resolver(User)
 @Service()
@@ -14,6 +14,12 @@ class UserResolver {
     private userService: UserService,
     @InjectRepository() private readonly postLikeRepository: PostLikeRepository,
   ) {}
+
+  @Query(returns => User)
+  async user(@Args() userArgs: UserArgs) {
+    const { id } = userArgs;
+    return this.userService.getUser({ id });
+  }
 
   @Authorized()
   @Query(returns => User)
