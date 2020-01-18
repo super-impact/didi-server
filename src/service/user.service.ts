@@ -2,12 +2,16 @@ import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 
 import { User } from '../database/entity';
-import { UserRepository } from '../database/repository';
+import { PostLikeRepository, PostRepository, UserRepository } from '../database/repository';
 import { generateGraphQLError, GraphQLErrorMessage } from '../graphql/error';
 
 @Service()
 class UserService {
-  constructor(@InjectRepository() private readonly userRepository: UserRepository) {}
+  constructor(
+    @InjectRepository() private readonly userRepository: UserRepository,
+    @InjectRepository() private readonly postLikeRepository: PostLikeRepository,
+    @InjectRepository() private readonly postRepository: PostRepository,
+  ) {}
 
   public async createUser(user: Partial<User>) {
     return this.userRepository.save(user);
@@ -25,6 +29,11 @@ class UserService {
     }
 
     return foundUser;
+  }
+
+  public async getLikePosts(user: Pick<User, 'id'>) {
+    const likePost = await this.postLikeRepository.findLikePostsByUser({ id: user.id });
+    return await this.postRepository.getPostByIds(likePost.map(likePostId => likePostId.post.id));
   }
 }
 
