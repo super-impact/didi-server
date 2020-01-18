@@ -32,8 +32,13 @@ class UserService {
   }
 
   public async getLikePosts(user: Pick<User, 'id'>) {
-    const likePost = await this.postLikeRepository.findLikePostsByUser({ id: user.id });
-    return await this.postRepository.getPostByIds(likePost.map(likePostId => likePostId.post.id));
+    const likePosts = await this.postLikeRepository.findLikePostsByUser({ id: user.id });
+
+    if (likePosts.length === 0) {
+      return [];
+    }
+
+    return await this.postRepository.getPostByIds(likePosts.map(likePost => likePost.post.id));
   }
 }
 

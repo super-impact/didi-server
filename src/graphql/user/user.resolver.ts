@@ -18,6 +18,7 @@ class UserResolver {
   @Query(returns => User)
   async user(@Args() userArgs: UserArgs) {
     const { id } = userArgs;
+
     return this.userService.getUser({ id });
   }
 
