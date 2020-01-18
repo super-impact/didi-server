@@ -1,7 +1,23 @@
 import { Min } from 'class-validator';
 import { ArgsType, Field, ID, InputType, Int, ObjectType } from 'type-graphql';
 
-import { User } from '../user/user.type';
+@ObjectType()
+export class ContributorUser {
+  @Field(type => ID)
+  id: string;
+
+  @Field()
+  email: string;
+
+  @Field()
+  displayName: string;
+
+  @Field()
+  profileImageUrl: string;
+
+  @Field()
+  createdAt: Date;
+}
 
 @ObjectType()
 class Topic {
@@ -32,8 +48,8 @@ class Post {
   @Field()
   createdAt: Date;
 
-  @Field(type => User)
-  contributorUser: User;
+  @Field(type => ContributorUser)
+  contributorUser: ContributorUser;
 
   @Field(type => [Topic])
   topics: Topic[];
