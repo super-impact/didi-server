@@ -20,6 +20,19 @@ class PostLikeRepository extends Repository<PostLike> {
 
     return !!postLike;
   }
+
+  public async getLikeCountByUser(user: Partial<User>) {
+    return await this.count({ user });
+  }
+
+  public async findLikePostsByUser(user: Partial<User>) {
+    return await this.find({
+      relations: ['post'],
+      where: {
+        user,
+      },
+    });
+  }
 }
 
 export default PostLikeRepository;
