@@ -1,6 +1,8 @@
-import { Authorized, Ctx, Query, Resolver } from 'type-graphql';
+import { Authorized, Ctx, FieldResolver, Query, Resolver, Root } from 'type-graphql';
 import { Service } from 'typedi';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
+import { PostLikeRepository } from '../../database/repository';
 import { ContextType } from '../../middlewares/auth.mididleware';
 import { UserService } from '../../service';
 import { User } from './user.type';
@@ -8,7 +10,10 @@ import { User } from './user.type';
 @Resolver(User)
 @Service()
 class UserResolver {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    @InjectRepository() private readonly postLikeRepository: PostLikeRepository,
+  ) {}
 
   @Authorized()
   @Query(returns => User)
@@ -16,6 +21,16 @@ class UserResolver {
     const { id } = context.token;
 
     return this.userService.getUser({ id });
+  }
+
+  @FieldResolver()
+  async likeCount(@Root() root: User) {
+    return this.postLikeRepository.getLikeCountByUser({ id: root.id });
+  }
+
+  @FieldResolver()
+  async likePosts(@Root() root: User) {
+    return await this.userService.getLikePosts({ id: root.id });
   }
 }
 

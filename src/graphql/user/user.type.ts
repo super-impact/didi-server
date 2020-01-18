@@ -1,5 +1,7 @@
 import { Field, ID, ObjectType } from 'type-graphql';
 
+import { Post } from '../post/post.type';
+
 @ObjectType()
 export class User {
   @Field(type => ID)
@@ -16,4 +18,10 @@ export class User {
 
   @Field()
   createdAt: Date;
+
+  @Field()
+  likeCount: number;
+
+  @Field(type => [Post])
+  likePosts: Post[];
 }
