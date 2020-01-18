@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, In, Repository } from 'typeorm';
 
 import { Post } from '../entity';
 
@@ -23,6 +23,15 @@ class PostRepository extends Repository<Post> {
       relations: ['contributorUser', 'topics', 'postLikes'],
       where: {
         id,
+      },
+    });
+  }
+
+  public async getPostByIds(ids: string[]) {
+    return this.find({
+      relations: ['contributorUser', 'topics'],
+      where: {
+        id: In(ids.map(id => id)),
       },
     });
   }
